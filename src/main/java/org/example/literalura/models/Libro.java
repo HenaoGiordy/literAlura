@@ -1,7 +1,10 @@
 package org.example.literalura.models;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
+import org.example.literalura.dto.LibroDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,21 +16,19 @@ public class Libro {
 
     private String titulo;
 
-    private String autor;
-
     private String idioma;
 
-    private String descargas;
+    private Integer descargas;
 
-    @ManyToMany(mappedBy = "libros")
+    @ManyToMany(mappedBy = "libros", fetch = FetchType.LAZY)
     private List<Autor> autores;
 
-    public Libro(Integer id, String titulo, String autor, String idioma, String descargas) {
-        this.id = id;
-        this.titulo = titulo;
-        this.autor = autor;
-        this.idioma = idioma;
-        this.descargas = descargas;
+    public Libro(LibroDTO libroDTO){
+        ObjectMapper mapper = new ObjectMapper();
+        this.titulo = libroDTO.title();
+        this.autores = new ArrayList<>();
+        this.autores.addAll(libroDTO.authors().stream().map(Autor::new).toList());
+        this.descargas = libroDTO.download_count();
     }
 
     public Libro() {
@@ -49,14 +50,6 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    public String getAutor() {
-        return autor;
-    }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
-
     public String getIdioma() {
         return idioma;
     }
@@ -65,18 +58,18 @@ public class Libro {
         this.idioma = idioma;
     }
 
-    public String getDescargas() {
+    public Integer getDescargas() {
         return descargas;
     }
 
-    public void setDescargas(String descargas) {
+    public void setDescargas(Integer descargas) {
         this.descargas = descargas;
     }
 
     @Override
     public String toString() {
         return "Libro:" +
-                ", autor='" + autor + '\'' +
+                ", autor='" + autores + '\'' +
                 ", titulo='" + titulo + '\'' +
                 "descargas='" + descargas + '\'' +
                 ", idioma='" + idioma + '\'';

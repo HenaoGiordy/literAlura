@@ -1,8 +1,17 @@
 package org.example.literalura.logica;
 
+import org.example.literalura.api.ApiBooks;
+import org.example.literalura.models.Libro;
+
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Interaccion {
+
+    private ServiceImpl service = new ServiceImpl();
+    public Interaccion(ServiceImpl service) {
+        this.service = service;
+    }
 
     public Interaccion() {}
 
@@ -15,12 +24,16 @@ public class Interaccion {
                 System.out.println("5-listar libros por idioma");
                 System.out.println("6-salir");
     }
-    public void iniciar() {
+    public void iniciar() throws IOException, InterruptedException {
         Scanner sc = new Scanner(System.in);
         boolean isRunning = true;
         while (isRunning) {
             menu();
             int opcion = sc.nextInt();
+            if(opcion == 1){
+                Libro nuevo = service.buscarLibro("Romeo");
+                System.out.println(nuevo);
+            }
             if(opcion == 6){
                 isRunning = false;
             }

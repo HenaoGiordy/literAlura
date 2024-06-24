@@ -10,7 +10,12 @@ public class LiterAluraApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LiterAluraApplication.class, args);
 		Interaccion interaccion = new Interaccion();
-		interaccion.iniciar();
+		try {
+			interaccion.iniciar();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 	}
 
 }

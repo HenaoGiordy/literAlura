@@ -1,8 +1,11 @@
 package org.example.literalura.models;
 
 import jakarta.persistence.*;
+import org.example.literalura.dto.AutorDTO;
 
 import java.time.LocalDate;
+import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,8 +14,8 @@ public class Autor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nombre;
-    private LocalDate fechaNacimiento;
-    private LocalDate fechaFallecimiento;
+    private Integer fechaNacimiento;
+    private Integer fechaFallecimiento;
 
     @JoinTable(
             name="relacion_autor_libro",
@@ -25,10 +28,11 @@ public class Autor {
     public Autor() {
     }
 
-    public Autor(String nombre, LocalDate fechaNacimiento, LocalDate fechaFallecimiento) {
-        this.nombre = nombre;
-        this.fechaNacimiento = fechaNacimiento;
-        this.fechaFallecimiento = fechaFallecimiento;
+    public Autor(AutorDTO autorDTO) {
+        this.nombre = autorDTO.name();
+        this.fechaNacimiento = autorDTO.birth_year();
+        this.fechaFallecimiento = autorDTO.death_year();
+        this.libros = new ArrayList<>();
     }
 
     public String getNombre() {
@@ -39,19 +43,19 @@ public class Autor {
         this.nombre = nombre;
     }
 
-    public LocalDate getFechaNacimiento() {
+    public Integer getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+    public void setFechaNacimiento(Integer fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public LocalDate getFechaFallecimiento() {
+    public Integer getFechaFallecimiento() {
         return fechaFallecimiento;
     }
 
-    public void setFechaFallecimiento(LocalDate fechaFallecimiento) {
+    public void setFechaFallecimiento(Integer fechaFallecimiento) {
         this.fechaFallecimiento = fechaFallecimiento;
     }
 
