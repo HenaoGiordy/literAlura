@@ -1,8 +1,8 @@
 package org.example.literalura.models;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import org.example.literalura.dto.LibroDTO;
+import org.example.literalura.utils.Idioma;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,20 +14,23 @@ public class Libro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false, unique = true)
     private String titulo;
-
-    private String idioma;
 
     private Integer descargas;
 
-    @ManyToMany(mappedBy = "libros", fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    private List<Idioma> idiomas;
+
+    @ManyToMany(mappedBy = "libros", fetch = FetchType.EAGER)
     private List<Autor> autores;
 
     public Libro(LibroDTO libroDTO){
-        ObjectMapper mapper = new ObjectMapper();
         this.titulo = libroDTO.title();
         this.autores = new ArrayList<>();
         this.autores.addAll(libroDTO.authors().stream().map(Autor::new).toList());
+        this.idiomas = new ArrayList<>();
+        libroDTO.languages().forEach(x ->{this.idiomas.add(Idioma.fromString(x));});
         this.descargas = libroDTO.download_count();
     }
 
@@ -50,13 +53,6 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    public String getIdioma() {
-        return idioma;
-    }
-
-    public void setIdioma(String idioma) {
-        this.idioma = idioma;
-    }
 
     public Integer getDescargas() {
         return descargas;
@@ -66,12 +62,29 @@ public class Libro {
         this.descargas = descargas;
     }
 
+    public List<Autor> getAutores() {
+        return autores;
+    }
+
+    public void setAutores(List<Autor> autores) {
+        this.autores = autores;
+    }
+
+    public List<Idioma> getIdiomas() {
+        return idiomas;
+    }
+
+    public void setIdiomas(List<Idioma> idiomas) {
+        this.idiomas = idiomas;
+    }
+
     @Override
     public String toString() {
         return "Libro:" +
-                ", autor='" + autores + '\'' +
-                ", titulo='" + titulo + '\'' +
-                "descargas='" + descargas + '\'' +
-                ", idioma='" + idioma + '\'';
+                "titulo=" + titulo + '\n' +
+                "descargas=" + descargas + '\n' +
+                "idioma=" + idiomas + '\n'+
+                "autores=" + autores + '\''
+                ;
     }
 }

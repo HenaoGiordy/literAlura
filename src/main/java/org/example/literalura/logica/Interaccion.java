@@ -1,19 +1,21 @@
 package org.example.literalura.logica;
 
-import org.example.literalura.api.ApiBooks;
+
 import org.example.literalura.models.Libro;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Scanner;
 
+@Component
 public class Interaccion {
 
-    private ServiceImpl service = new ServiceImpl();
+    private final ServiceImpl service;
+
     public Interaccion(ServiceImpl service) {
         this.service = service;
     }
-
-    public Interaccion() {}
 
     public void menu(){
                 System.out.println("Elija una opción:");

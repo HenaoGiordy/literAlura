@@ -3,8 +3,6 @@ package org.example.literalura.models;
 import jakarta.persistence.*;
 import org.example.literalura.dto.AutorDTO;
 
-import java.time.LocalDate;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +11,7 @@ public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(nullable = false, unique = true)
     private String nombre;
     private Integer fechaNacimiento;
     private Integer fechaFallecimiento;
@@ -73,7 +72,6 @@ public class Autor {
                 ", nombre='" + nombre + '\'' +
                 "fechaFallecimiento=" + fechaFallecimiento +
                 ", fechaNacimiento=" + fechaNacimiento +
-                ", libros=" + libros +
                 '}';
     }
 }
