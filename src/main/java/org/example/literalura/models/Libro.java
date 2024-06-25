@@ -5,6 +5,7 @@ import org.example.literalura.dto.LibroDTO;
 import org.example.literalura.utils.Idioma;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -19,6 +20,7 @@ public class Libro {
 
     private Integer descargas;
 
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<Idioma> idiomas;
 

@@ -3,12 +3,12 @@ package org.example.literalura.logica;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.literalura.api.ApiBooks;
 import org.example.literalura.dto.ApiListBooksDTO;
-import org.example.literalura.dto.AutorDTO;
 import org.example.literalura.dto.LibroDTO;
 import org.example.literalura.models.Autor;
 import org.example.literalura.models.Libro;
 import org.example.literalura.repository.AutorRepository;
 import org.example.literalura.repository.LibroRepository;
+import org.example.literalura.utils.Idioma;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,11 +51,22 @@ public class ServiceImpl implements IService {
 
         ApiListBooksDTO libros = mapper.readValue(response.body(), ApiListBooksDTO.class);
 
+
+
         Optional<LibroDTO> libro = libros.results().stream().findFirst();
+
+
 
         if (libro.isPresent()) {
             LibroDTO libroDTO = libro.get();
             Libro nuevoLibro = new Libro(libroDTO);
+
+            Optional<Libro> libroExistente = libroRepository.findByTitulo(nuevoLibro.getTitulo());
+
+            if (libroExistente.isPresent()) {
+                return libroExistente.get();
+            }
+
             List<Autor> autores = libroDTO.authors().stream()
                     .map(Autor::new)
                     .toList();
@@ -72,21 +83,22 @@ public class ServiceImpl implements IService {
 
     @Override
     public List<Libro> buscarLibrosRegistrados() {
-        return List.of();
+        return libroRepository.findAll();
     }
 
     @Override
     public List<Autor> buscarAutoresRegistrados() {
-        return List.of();
+        return autorRepository.findAll();
     }
 
     @Override
-    public List<Autor> autoresVivosFechaDeterminada(LocalDate fechaInicial, LocalDate fechaFinal) {
-        return List.of();
+    public List<Autor> autoresVivosFechaDeterminada(Integer fechaInicial, Integer fechaFinal) {
+        List<Autor> autores = autorRepository.findByFechaNacimientoBetween(fechaInicial, fechaFinal);
+        return autores.stream().filter(x->x.getFechaFallecimiento() > fechaFinal).toList();
     }
 
     @Override
-    public List<Libro> buscarLibrosIdioma(String idioma) {
-        return List.of();
+    public List<Libro> buscarLibrosIdioma(Idioma idioma) {
+        return libroRepository.findByIdiomas(idioma);
     }
 }
